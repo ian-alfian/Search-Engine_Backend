@@ -6,6 +6,7 @@ Startup:  python -m uvicorn main:app --reload --port 8000
 """
 
 import time
+import os
 import logging
 from contextlib import asynccontextmanager
 from typing import Literal
@@ -51,9 +52,12 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# Jika FRONTEND_URL belum diatur di Render, izinkan semua ("*")
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "*") 
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"], # Mengizinkan frontend Next.js Anda
+    allow_origins=[FRONTEND_URL], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
